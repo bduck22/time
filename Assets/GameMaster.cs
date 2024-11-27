@@ -1,16 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml;
 using UnityEngine;
 
 public class GameMaster : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public int speed;
+    public GameObject text_pre;
     void Start()
     {
-        
+        StartCoroutine(spawn());
     }
-
-    // Update is called once per frame
+    IEnumerator spawn()
+    {
+        Instantiate(text_pre).transform.position= new Vector2(20, -5.648f);
+        yield return new WaitForSeconds(2);
+        yield return StartCoroutine(spawn());
+    }
     void Update()
     {
         
