@@ -17,8 +17,11 @@ public class jump : MonoBehaviour
     bool slide;
     bool once;
     bool invin;
+    public float hp;
+    public float max_hp=100; 
     void Start()
     {
+        hp = max_hp;
         invin = false;
         once = true;
         master = GameObject.FindWithTag("master").GetComponent<GameMaster>();
@@ -102,6 +105,7 @@ public class jump : MonoBehaviour
         {
             if (collision.transform.position.z == -0.1f && collision.transform.GetComponent<moveob>()) // ¾¦¿¡ ´ê¾ÒÀ» ½Ã
             {
+                hp -= 20;
                 invin = true;
                 StartCoroutine(blink());
                 StartCoroutine(invinend(1));
@@ -111,6 +115,7 @@ public class jump : MonoBehaviour
             }
             if (collision.transform.position.z == -0.2f && collision.transform.GetComponent<moveob>()) // ¸¶´Ã¿¡ ´ê¾ÒÀ» ½Ã
             {
+                hp -= 20;
                 invin = true;
                 StartCoroutine(blink());
                 StartCoroutine(invinend(1));
