@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class GameMaster : MonoBehaviour
 {
-    public int speed;
+    public GameObject[] hudle;
+    public float speed;
     public GameObject text_pre;
     void Start()
     {
@@ -13,7 +14,7 @@ public class GameMaster : MonoBehaviour
     }
     IEnumerator spawn()
     {
-        Instantiate(text_pre).transform.position= new Vector2(20, -5.648f);
+        Instantiate(text_pre,new Vector3(20, -5.648f, (int)Random.Range(1, 3)), transform.rotation);
         yield return new WaitForSeconds(2);
         yield return StartCoroutine(spawn());
     }

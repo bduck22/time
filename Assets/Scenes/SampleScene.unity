@@ -731,8 +731,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4b967a3065ef8046a4aaa05ad7bcfab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hudle: []
   speed: 10
-  text_pre: {fileID: 9004689498697006604, guid: 439fae351cae3d146b1136686567dccb, type: 3}
+  text_pre: {fileID: 3851579974811297867, guid: 5a0508f5b93422c479640982e708698d, type: 3}
 --- !u!4 &1962650220
 Transform:
   m_ObjectHideFlags: 0
