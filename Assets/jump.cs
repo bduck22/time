@@ -16,8 +16,10 @@ public class jump : MonoBehaviour
     bool stop;
     bool slide;
     bool once;
+    bool invin;
     void Start()
     {
+        invin = false;
         once = true;
         master = GameObject.FindWithTag("master").GetComponent<GameMaster>();
         onejump = true;
@@ -29,7 +31,6 @@ public class jump : MonoBehaviour
         if (!stop) { 
             if (((Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.UpArrow)) )&& onejump&&!Input.GetKey(KeyCode.DownArrow))
             {
-                onejump = false;
                 ani.SetTrigger("Jump");
                 StartCoroutine(Jump());
             }
@@ -49,11 +50,35 @@ public class jump : MonoBehaviour
                 GetComponent<CapsuleCollider2D>().enabled = true;
             }
         }
-        if (onejump && transform.position.y != -5.65f && !slide) transform.position = new Vector3(transform.position.x, -5.65f, transform.position.z);
+        else
+        {
+            slide = false;
+            ani.SetBool("Slide", false);
+            GetComponent<BoxCollider2D>().enabled = false;
+            GetComponent<CapsuleCollider2D>().enabled = true;
+        }
+        if (onejump && transform.position.y != -5.65f && !slide)
+        {
+            transform.position = new Vector3(transform.position.x, -5.65f, transform.position.z);
+        }
+    }
+    IEnumerator blink()
+    {
+        GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 150);
+        yield return new WaitForSecondsRealtime(0.1f);
+        GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 255);
+        yield return new WaitForSecondsRealtime(0.1f);
+        if(invin)yield return StartCoroutine(blink());
+    }
+    IEnumerator invinend(float cool)
+    {
+        yield return new WaitForSecondsRealtime(cool);
+        invin = false;
     }
     IEnumerator Jump()
     {
         yield return new WaitForSeconds(0.15f);
+        onejump = false;
         if (once)
         {
             once = false;
@@ -62,31 +87,42 @@ public class jump : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (collision.transform == Physics2D.Raycast(transform.position, Vector2.down))//&&collision.transform.position.z<=0
         if(collision.transform == Physics2D.Raycast(transform.position, Vector2.down))
         {
             ani.SetTrigger("lend");
+            ani.ResetTrigger("Jump");
             once = true;
             onejump = true;
         }
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.transform.position.z ==0.1f && collision.transform.GetComponent<moveob>()) // ¾¦¿¡ ´ê¾ÒÀ» ½Ã
+        if (!invin)
         {
-            //StartCoroutine(SpeedDown(master.speed * 0.8f, 1));
-            StartCoroutine(SpeedDown2(0.5f, 1));
-            Destroy(collision.gameObject);
-        }
-        if (collision.transform.position.z == 0.2f && collision.transform.GetComponent<moveob>()) // ¸¶´Ã¿¡ ´ê¾ÒÀ» ½Ã
-        {
-            StartCoroutine(Stop(1));
-            Destroy(collision.gameObject);
+            if (collision.transform.position.z == -0.1f && collision.transform.GetComponent<moveob>()) // ¾¦¿¡ ´ê¾ÒÀ» ½Ã
+            {
+                invin = true;
+                StartCoroutine(blink());
+                StartCoroutine(invinend(1));
+                //StartCoroutine(SpeedDown(master.speed * 0.8f, 1));
+                StartCoroutine(SpeedDown2(0.5f, 1));
+                Destroy(collision.gameObject);
+            }
+            if (collision.transform.position.z == -0.2f && collision.transform.GetComponent<moveob>()) // ¸¶´Ã¿¡ ´ê¾ÒÀ» ½Ã
+            {
+                invin = true;
+                StartCoroutine(blink());
+                StartCoroutine(invinend(1));
+                StartCoroutine(Stop(1));
+                Destroy(collision.gameObject);
+            }
         }
     }
     IEnumerator Stop(float cool)
     {
         stop = true;
-        yield return new WaitForSeconds(cool);
+        yield return new WaitForSecondsRealtime(cool);
         stop = false;
     }
     
@@ -100,7 +136,7 @@ public class jump : MonoBehaviour
     IEnumerator SpeedDown2(float num, float cool)
     {
         Time.timeScale = num;
-        yield return new WaitForSeconds(cool);
+        yield return new WaitForSecondsRealtime(cool);
         Time.timeScale = 1;
     }
     private void OnCollisionExit2D(Collision2D collision)
