@@ -5,15 +5,16 @@ using UnityEngine;
 
 public class GameMaster : MonoBehaviour
 {
-    public int speed;
-    public GameObject text_pre;
+    public GameObject[] hudle;
+    public float speed;
     void Start()
     {
         StartCoroutine(spawn());
     }
     IEnumerator spawn()
     {
-        Instantiate(text_pre).transform.position= new Vector2(20, -5.648f);
+        int type = Random.Range(1, 3);
+        Instantiate(hudle[type - 1]);
         yield return new WaitForSeconds(2);
         yield return StartCoroutine(spawn());
     }
