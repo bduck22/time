@@ -87,7 +87,11 @@ public class jump : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
+<<<<<<< HEAD
         if (collision.transform == Physics2D.Raycast(transform.position, Vector2.down))//&&collision.transform.position.z<=0
+=======
+        if(collision.transform == Physics2D.Raycast(transform.position, Vector2.down))
+>>>>>>> parent of 130e57b (ui, jump cooldown)
         {
             ani.SetTrigger("lend");
             ani.ResetTrigger("Jump");
